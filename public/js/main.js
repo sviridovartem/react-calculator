@@ -19051,25 +19051,21 @@ var Button = React.createClass({
   render: function () {
     var buttonStyle;
     if (this.state.type == "number") {
-      buttonStyle = { background: '#33CC66', color: 'white', minHeight: '60px',
-        minWidth: '120px' };
+      buttonStyle = { background: '#33CC66', color: 'white', minWidth: '60px' };
     } else if (this.state.type == "operation") {
-      buttonStyle = { background: '#00CCFF', color: 'white', minHeight: '60px',
-        minWidth: '120px' };
+      buttonStyle = { background: '#32ABCA', color: 'white', minWidth: '60px' };
     } else if (this.state.type == "clear") {
-      buttonStyle = { background: '#990000', color: 'white', minHeight: '60px',
-        minWidth: '120px' };
+      buttonStyle = { background: '#F57B7B', color: 'white', minWidth: '60px' };
     } else {
-      buttonStyle = { background: '#6600CC', color: 'white', minHeight: '60px',
-        minWidth: '120px' };
+      buttonStyle = { background: '#057BF5', color: 'white', minWidth: '60px' };
     }
 
     return React.createElement(
       'div',
-      { className: 'col-sm-3' },
+      { className: 'col-xs-3' },
       React.createElement(
         'button',
-        { type: 'button', style: buttonStyle, type: this.state.type, onClick: this.onSubmit, className: 'btn btn-default' },
+        { type: 'button', style: buttonStyle, type: this.state.type, onClick: this.props.onClick, className: 'btn btn-default btn-circle' },
         this.state.value
       )
     );
@@ -19082,41 +19078,116 @@ module.exports = Button;
 var React = require('react');
 var Button = require('./Button.jsx');
 
-var Panel = React.createClass({
-  displayName: 'Panel',
+var MainPanel = React.createClass({
+  displayName: 'MainPanel',
 
+  getInitialState: function () {
+    return { value: "" };
+  },
 
+  onClick: function (val, e) {
+    var val1 = this.state.value;
+    val1 += val;
+    this.setState({ value: val1 });
+
+    console.log(val1);
+  },
+  onClear: function (e) {
+    this.setState({ value: "" });
+  },
+  onEvaluate: function () {
+    var val = this.state.value;
+    if (val.indexOf("+") !== -1 && val.indexOf("–") === -1 && val.indexOf("X") === -1 && val.indexOf("÷") === -1) {
+      var pos = val.indexOf("+");
+      if (pos === 0 || pos === val.length - 1) {
+        this.setState({ value: "" });
+      } else {
+        var first = val.substring(0, pos);
+        var second = val.substring(pos + 1);
+        var fN = parseInt(first);
+        var sN = parseInt(second);
+        this.setState({ value: fN + sN });
+      }
+    } else if (val.indexOf("+") === -1 && val.indexOf("–") !== -1 && val.indexOf("X") === -1 && val.indexOf("÷") === -1) {
+      var pos = val.indexOf("–");
+      if (pos === 0 || pos === val.length - 1) {
+        this.setState({ value: "" });
+      } else {
+        var first = val.substring(0, pos);
+        var second = val.substring(pos + 1);
+        var fN = parseInt(first);
+        var sN = parseInt(second);
+        this.setState({ value: fN - sN });
+      }
+    } else if (val.indexOf("+") === -1 && val.indexOf("–") === -1 && val.indexOf("X") !== -1 && val.indexOf("÷") === -1) {
+      var pos = val.indexOf("X");
+      if (pos === 0 || pos === val.length - 1) {
+        this.setState({ value: "" });
+      } else {
+        var first = val.substring(0, pos);
+        var second = val.substring(pos + 1);
+        var fN = parseInt(first);
+        var sN = parseInt(second);
+        this.setState({ value: fN * sN });
+      }
+    } else if (val.indexOf("+") === -1 && val.indexOf("–") === -1 && val.indexOf("X") === -1 && val.indexOf("÷") !== -1) {
+      var pos = val.indexOf("÷");
+      if (pos === 0 || pos === val.length - 1) {
+        this.setState({ value: "" });
+      } else {
+        var first = val.substring(0, pos);
+        var second = val.substring(pos + 1);
+        var fN = parseInt(first);
+        var sN = parseInt(second);
+        this.setState({ value: fN / sN });
+      }
+    } else {
+      this.setState({ value: "" });
+    }
+  },
   render: function () {
     return React.createElement(
       'div',
-      { className: 'container' },
-      React.createElement(Button, { title: '1', type: 'number' }),
-      React.createElement(Button, { title: '2', type: 'number' }),
-      React.createElement(Button, { title: '3', type: 'number' }),
-      React.createElement(Button, { title: '+', type: 'operation' }),
-      React.createElement(Button, { title: '4', type: 'number' }),
-      React.createElement(Button, { title: '5', type: 'number' }),
-      React.createElement(Button, { title: '6', type: 'number' }),
-      React.createElement(Button, { title: '-', type: 'operation' }),
-      React.createElement(Button, { title: '7', type: 'number' }),
-      React.createElement(Button, { title: '8', type: 'number' }),
-      React.createElement(Button, { title: '9', type: 'number' }),
-      React.createElement(Button, { title: 'X', type: 'operation' }),
-      React.createElement(Button, { title: 'C', type: 'clear' }),
-      React.createElement(Button, { title: '0', type: 'number' }),
-      React.createElement(Button, { title: '=', type: 'equal' }),
-      React.createElement(Button, { title: '/', type: 'operation' })
+      { className: 'panel panel-primary', style: { background: 'whitesmoke', borderColor: '#B3E2FD' } },
+      React.createElement(
+        'div',
+        { className: 'panel-body', style: { background: 'whitesmoke' } },
+        React.createElement(
+          'div',
+          { className: 'col-xs-12' },
+          React.createElement(
+            'div',
+            { className: 'form-group', style: { background: 'whitesmoke' } },
+            React.createElement('input', { type: 'text', className: 'form-control', value: this.state.value, disabled: true })
+          )
+        ),
+        React.createElement(Button, { title: '1', type: 'number', onClick: this.onClick.bind(this, "1") }),
+        React.createElement(Button, { title: '2', type: 'number', onClick: this.onClick.bind(this, "2") }),
+        React.createElement(Button, { title: '3', type: 'number', onClick: this.onClick.bind(this, "3") }),
+        React.createElement(Button, { title: '+', type: 'operation', onClick: this.onClick.bind(this, "+") }),
+        React.createElement(Button, { title: '4', type: 'number', onClick: this.onClick.bind(this, "4") }),
+        React.createElement(Button, { title: '5', type: 'number', onClick: this.onClick.bind(this, "5") }),
+        React.createElement(Button, { title: '6', type: 'number', onClick: this.onClick.bind(this, "6") }),
+        React.createElement(Button, { title: '-', type: 'operation', onClick: this.onClick.bind(this, "-") }),
+        React.createElement(Button, { title: '7', type: 'number', onClick: this.onClick.bind(this, "7") }),
+        React.createElement(Button, { title: '8', type: 'number', onClick: this.onClick.bind(this, "8") }),
+        React.createElement(Button, { title: '9', type: 'number', onClick: this.onClick.bind(this, "9") }),
+        React.createElement(Button, { title: 'X', type: 'operation', onClick: this.onClick.bind(this, "X") }),
+        React.createElement(Button, { title: 'C', type: 'clear', onClick: this.onClear }),
+        React.createElement(Button, { title: '0', type: 'number', onClick: this.onClick.bind(this, "0") }),
+        React.createElement(Button, { title: '=', type: 'equal', onClick: this.onEvaluate }),
+        React.createElement(Button, { title: '/', type: 'operation', onClick: this.onClick.bind(this, "/") })
+      )
     );
   }
 });
-
-module.exports = Panel;
+module.exports = MainPanel;
 
 },{"./Button.jsx":159,"react":157}],161:[function(require,module,exports){
 var React = require('react');
 var ReactDom = require('react-dom');
-var Panel = require('./components/Panel.jsx');
+var MainPanel = require('./components/MainPanel.jsx');
 
-ReactDom.render(React.createElement(Panel, null), document.getElementById('panel'));
+ReactDom.render(React.createElement(MainPanel, null), document.getElementById('panel'));
 
-},{"./components/Panel.jsx":160,"react":157,"react-dom":1}]},{},[161]);
+},{"./components/MainPanel.jsx":160,"react":157,"react-dom":1}]},{},[161]);

@@ -17,22 +17,18 @@ var Button = React.createClass({
   render:function(){
     var buttonStyle;
     if (this.state.type == "number"){
-      buttonStyle={background:'#33CC66', color: 'white', minHeight: '60px',
-        minWidth: '120px'}
+      buttonStyle={background:'#33CC66', color: 'white',minWidth: '60px'}
       }else if(this.state.type == "operation"){
-        buttonStyle={background:'#00CCFF', color: 'white', minHeight: '60px',
-          minWidth: '120px'}
+        buttonStyle={background:'#32ABCA', color: 'white',minWidth: '60px'}
         }else if(this.state.type == "clear"){
-          buttonStyle={background:'#990000', color: 'white', minHeight: '60px',
-            minWidth: '120px'}
+          buttonStyle={background:'#F57B7B', color: 'white',minWidth: '60px'}
           }else{
-            buttonStyle={background:'#6600CC', color: 'white', minHeight: '60px',
-              minWidth: '120px'}
+            buttonStyle={background:'#057BF5', color: 'white',minWidth: '60px'}
             }
 
           return(
-            <div className="col-sm-3">
-              <button type="button" style={buttonStyle} type={this.state.type} onClick={this.onSubmit} className="btn btn-default">{this.state.value}</button>
+            <div className="col-xs-3">
+              <button type="button" style={buttonStyle} type={this.state.type} onClick={this.props.onClick} className="btn btn-default btn-circle">{this.state.value}</button>
             </div>
           );
         }

@@ -1,5 +1,5 @@
 var React = require('react');
 var ReactDom = require ('react-dom');
-var Panel = require('./components/Panel.jsx')
+var MainPanel = require('./components/MainPanel.jsx')
 
-ReactDom.render(<Panel />, document.getElementById('panel'));
+ReactDom.render(<MainPanel />, document.getElementById('panel'));
